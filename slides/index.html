@@ -18,6 +18,36 @@
   <script>if(sessionStorage.getItem('tencent-pr-auth')!=='1'){location.replace('/tencent-pr-training/');document.write('')}</script>
   <div id="app"></div>
   <div id="mermaid-rendering-container"></div>
-  
+  <script>
+  // Wait for Slidev app to mount, then hook into its navigation
+  (function() {
+    var ready = false;
+    var locked = false;
+
+    function getNav() {
+      try {
+        var app = document.querySelector('#app');
+        if (!app || !app.__vue_app__) return null;
+        return app.__vue_app__.config.globalProperties.$nav;
+      } catch(e) { return null; }
+    }
+
+    document.addEventListener('pointerup', function(e) {
+      if (e.button !== 0) return;
+      if (locked) return;
+      var tag = e.target.tagName;
+      if (tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.target.closest('a, button, input, textarea, select, [contenteditable], nav')) return;
+
+      locked = true;
+      setTimeout(function() { locked = false; }, 500);
+
+      var nav = getNav();
+      if (nav && typeof nav.next === 'function') {
+        nav.next();
+      }
+    }, true);
+  })();
+  </script>
 </body>
 </html>
