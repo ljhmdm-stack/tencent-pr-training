@@ -19,11 +19,17 @@
   <div id="app"></div>
   <div id="mermaid-rendering-container"></div>
   <script>
-  document.addEventListener('click', function(e) {
-    if (e.button !== 0) return;
-    if (e.target.closest('a, button, input, textarea, select, [contenteditable]')) return;
-    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
-  });
+  (function(){
+    var last = 0;
+    document.addEventListener('pointerup', function(e) {
+      if (e.button !== 0) return;
+      if (e.target.closest('a, button, input, textarea, select, [contenteditable]')) return;
+      var now = Date.now();
+      if (now - last < 400) return;
+      last = now;
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true}));
+    });
+  })();
   </script>
 </body>
 </html>
